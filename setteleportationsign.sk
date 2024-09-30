@@ -1,0 +1,30 @@
+command /setteleportationsign <number> <text> <number> <number> <number> <number>:
+	usage: /setteleportationsign 编号 名称 等级 坐标x 坐标y 坐标z
+	permission: op
+	trigger:
+        # 存储输入信息
+		set {_number} to arg-1
+		set {_name} to arg-2
+		set {_level} to arg-3
+		set {_x} to arg-4
+		set {_y} to arg-5
+		set {_z} to arg-6
+
+        # 获取玩家目前位置
+		set {_location} to player's location
+	#获取玩家姓名
+		set {_playername} to player's name
+		set {_xme} to x-coordinate of player
+		set {_yme} to y-coordinate of player
+		set {_zme} to z-coordinate of player
+
+        # 给予传送牌
+		execute console command "give %{_playername}% oak_sign{BlockEntityTag: {front_text: {messages: [""\""\"""",""{\""text\"":\""前往\"",\""bold\"":true,\""color\"":\""aqua\"",\""clickEvent\"":{\""action\"":\""run_command\"",\""value\"":\""/tp %arg-4% %arg-5% %arg-6%\""}}"",""{\""text\"":\""%{_number}%.%{_name}%\"",\""bold\"":true,\""color\"":\""aqua\""}"",""\""\""""]}}}"
+        # 地图增加点
+		execute console command "dmarker add id:marker_%{_number}% %{_name}% set:溯源之锚 x:%{_x}% y:%{_y}% z:%{_z}% icon:marker_lv%{_level}% world:world"
+
+        # 如果等级大于等于2，给一张回来的传送牌
+		if {_level} >= 2:
+			execute console command "give %{_playername}% oak_sign{BlockEntityTag: {front_text: {messages: [""\""\"""",""{\""text\"":\""返回主城\"",\""bold\"":true,\""color\"":\""white\"",\""clickEvent\"":{\""action\"":\""run_command\"",\""value\"":\""/tp %{_xme}% %{_yme}% %{_zme}%\""}}"",""\""\"""",""\""\""""]}}}"
+			
+			
